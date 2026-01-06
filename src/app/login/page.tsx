@@ -1,74 +1,252 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Mail, Lock, AlertCircle, ArrowRight, Eye, EyeOff } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
+import { setSession } from "@/lib/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    
+    // Trim dos valores
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    // Validação: somente mostrar erro se realmente vazio após trim
+    if (!trimmedEmail || !trimmedPassword) {
+      setError("Por favor, preencha todos os campos");
+      return;
+    }
+
+    // Validação de e-mail
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setError("Por favor, insira um e-mail válido");
+      return;
+    }
+
+    // Bloquear duplo clique
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      console.log("LOGIN_SUBMIT", { email: trimmedEmail, senhaLength: trimmedPassword.length });
+
+      // Chamar API de login
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: trimmedEmail,
+          password: trimmedPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("LOGIN_RESPONSE", { 
+        status: response.status, 
+        body: data 
+      });
+
+      if (!response.ok) {
+        // Exibir erro real do backend
+        setError(data.message || 'Erro ao fazer login');
+        setLoading(false);
+        return;
+      }
+
+      console.log("✅ LOGIN_SUCCESS", { 
+        user: data.user,
+        isAdmin: data.user?.isAdmin,
+        hasSubscription: data.user?.hasActiveSubscription
+      });
+
+      // Salvar sessão no localStorage como backup
+      if (data.user) {
+        setSession(data.user);
+        console.log("✅ SESSION_CREATED - Sessão salva");
+      } else {
+        console.error("❌ Dados do usuário não retornados pela API");
+        setError("Erro ao processar login");
+        setLoading(false);
+        return;
+      }
+
+      // Aguardar para garantir que cookies foram setados
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // Determinar destino do redirecionamento
+      let destination = "/dashboard";
+      
+      if (data.user.isAdmin) {
+        destination = "/dashboard";
+        console.log("🔑 ADMIN LOGIN - Redirecionando para:", destination);
+      } else if (data.user.hasActiveSubscription) {
+        destination = "/dashboard";
+        console.log("✅ Usuário com plano - Redirecionando para:", destination);
+      } else if (!data.user.onboardingCompleted) {
+        destination = "/onboarding";
+        console.log("⚠️ Onboarding não completo - Redirecionando para:", destination);
+      } else {
+        destination = "/checkout";
+        console.log("⚠️ Usuário sem plano - Redirecionando para:", destination);
+      }
+
+      console.log("🚀 REDIRECT_TO:", destination);
+      
+      // Usar window.location.href para garantir reload completo
+      window.location.href = destination;
+      
+    } catch (err) {
+      console.error("LOGIN ERROR (EXCEPTION)", err);
+      setError("Erro ao fazer login. Verifique sua conexão e tente novamente.");
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
-        {/* Logo */}
-        <div className="flex items-center justify-center gap-2 text-[#3B82F6] text-3xl font-bold mb-8">
-          <div className="w-10 h-10 bg-[#3B82F6] rounded-lg flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo e Título */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <BrandLogo size="lg" showText={false} />
+            <span className="text-3xl font-bold text-gray-900">Levve</span>
           </div>
-          Levve
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Entre para continuar sua transformação
+          </h1>
+          <p className="text-gray-600">
+            Seu plano personalizado está te esperando
+          </p>
         </div>
 
-        {/* Título */}
-        <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
-          Bem-vindo de volta
-        </h1>
-        <p className="text-gray-600 text-center mb-8">
-          Entre para continuar sua jornada
+        {/* Card do Formulário */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Mensagem de Erro */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            )}
+
+            {/* Campo Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                E-mail
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0066FF] focus:border-transparent transition-all"
+                  placeholder="seu@email.com"
+                  disabled={loading}
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+
+            {/* Campo Senha */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                Senha
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0066FF] focus:border-transparent transition-all"
+                  placeholder="••••••••"
+                  disabled={loading}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Link Esqueci Senha */}
+            <div className="text-right">
+              <Link 
+                href="/forgot-password" 
+                className="text-sm text-[#0066FF] hover:underline font-medium"
+              >
+                Esqueci minha senha
+              </Link>
+            </div>
+
+            {/* Botão Entrar */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold py-4 rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Entrando...
+                </>
+              ) : (
+                <>
+                  Entrar
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Link para Criar Conta */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Não tem uma conta?{" "}
+              <Link 
+                href="/signup" 
+                className="text-[#0066FF] font-semibold hover:underline"
+              >
+                Criar conta
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Texto de Confiança */}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Sem cartão • Cancele quando quiser
         </p>
-
-        {/* Formulário */}
-        <form className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              E-mail
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              placeholder="seu@email.com"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Senha
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              placeholder="••••••••"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
-          >
-            Entrar
-          </button>
-        </form>
-
-        {/* Links */}
-        <div className="mt-6 text-center space-y-4">
-          <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 block">
-            Esqueci minha senha
-          </Link>
-          <div className="text-sm text-gray-600">
-            Não tem uma conta?{" "}
-            <Link href="/quiz-start" className="text-blue-600 hover:text-blue-700 font-semibold">
-              Comece agora
-            </Link>
-          </div>
-        </div>
       </div>
     </div>
   );

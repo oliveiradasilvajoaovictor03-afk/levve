@@ -1,0 +1,15 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo azul sólido com cantos arredondados -->
+  <rect width="180" height="180" rx="40" fill="#0066FF"/>
+  
+  <!-- Check branco que forma um "L" estilizado -->
+  <path d="M 49.2 98.4 L 70.3 119.5 L 133.6 56.2" 
+        stroke="white" 
+        stroke-width="17" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none"/>
+  
+  <!-- Detalhe verde-água na ponta -->
+  <circle cx="133.6" cy="56.2" r="8.5" fill="#4FFFB0" opacity="0.85"/>
+</svg>

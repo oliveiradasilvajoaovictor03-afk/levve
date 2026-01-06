@@ -1,301 +1,238 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { Check, Bot, Utensils, BarChart3, Brain, Heart, Sparkles, Shield } from 'lucide-react';
+import Link from "next/link";
+import { ArrowLeft, Check } from "lucide-react";
 
-export default function Page() {
-  const router = useRouter();
+// Links oficiais da Stripe (NetRip)
+const STRIPE_MENSAL = "https://buy.stripe.com/test_4gM4gs8Azf6g3cf1C663K03";
+const STRIPE_TRIMESTRAL = "https://buy.stripe.com/test_14A3co5on5vG9ADa8C63K02";
+const STRIPE_SEMESTRAL = "https://buy.stripe.com/test_7sY7sE5onbU4aEH94y63K01";
+const STRIPE_ANUAL = "https://buy.stripe.com/test_dRm7sE2cb4rCdQT4Oi63K00";
 
-  const handleSelectPlan = () => {
-    router.push('/checkout');
-  };
-
+export default function PlanosPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* 1️⃣ HERO - DECISÃO SEM PRESSÃO */}
-        <div className="text-center mb-16 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Seu plano está pronto. Agora é só começar.
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Botão Voltar */}
+        <Link
+          href="/resultado"
+          className="inline-flex items-center gap-2 text-[#0066FF] hover:text-blue-700 transition-colors mb-8"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Voltar</span>
+        </Link>
+
+        {/* Conteúdo Principal */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Escolha seu plano no Levve
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 mb-6 leading-relaxed">
-            Escolha o tempo de acompanhamento ideal para a sua transformação.
-            <br />
-            <span className="font-semibold text-blue-600">
-              Quanto maior o compromisso, maior o resultado.
-            </span>
-          </p>
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mt-8">
-            <p className="text-gray-700 leading-relaxed">
-              Você terá acesso completo ao LEVVE por <span className="font-bold text-blue-600">7 dias grátis</span>.
-              <br />
-              Para ativar o teste, é necessário cadastrar um cartão.
-              <br />
-              <span className="font-semibold">Você pode cancelar a qualquer momento antes da cobrança.</span>
-            </p>
-          </div>
-        </div>
-
-        {/* 2️⃣ O QUE ESTÁ INCLUSO EM TODOS OS PLANOS */}
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-10">
-            O que está incluso em todos os planos
-          </h2>
-          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="flex justify-center mb-4">
-                <div className="bg-blue-100 rounded-full p-4">
-                  <Bot className="w-8 h-8 text-blue-600" />
-                </div>
-              </div>
-              <p className="font-semibold text-gray-900">Acompanhamento diário por IA</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="flex justify-center mb-4">
-                <div className="bg-green-100 rounded-full p-4">
-                  <Utensils className="w-8 h-8 text-green-600" />
-                </div>
-              </div>
-              <p className="font-semibold text-gray-900">Planejamento alimentar simples e acessível</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="flex justify-center mb-4">
-                <div className="bg-purple-100 rounded-full p-4">
-                  <BarChart3 className="w-8 h-8 text-purple-600" />
-                </div>
-              </div>
-              <p className="font-semibold text-gray-900">Monitoramento de progresso e hábitos</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="flex justify-center mb-4">
-                <div className="bg-orange-100 rounded-full p-4">
-                  <Brain className="w-8 h-8 text-orange-600" />
-                </div>
-              </div>
-              <p className="font-semibold text-gray-900">Orientações claras todos os dias</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="flex justify-center mb-4">
-                <div className="bg-pink-100 rounded-full p-4">
-                  <Heart className="w-8 h-8 text-pink-600" />
-                </div>
-              </div>
-              <p className="font-semibold text-gray-900">App feito para o brasileiro real</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 3️⃣ PLANOS - FOCO TOTAL EM CONVERSÃO */}
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
-            Escolha seu plano
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {/* PLANO MENSAL */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-200 hover:border-blue-400 transition-all hover:shadow-2xl">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Mensal</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-gray-900">R$49,90</span>
-                  <span className="text-gray-600">/mês</span>
-                </div>
-                <p className="text-gray-600 text-sm">
-                  Ideal para quem quer começar com flexibilidade.
-                </p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Acesso completo ao app</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Acompanhamento diário</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Cancelamento a qualquer momento</span>
-                </li>
-              </ul>
-              <button
-                onClick={handleSelectPlan}
-                className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-colors"
-              >
-                Começar 7 dias grátis
-              </button>
-            </div>
-
-            {/* PLANO 3 MESES */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-300 hover:border-green-500 transition-all hover:shadow-2xl">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">3 Meses</h3>
-                <div className="mb-2">
-                  <span className="text-4xl font-bold text-gray-900">R$129,90</span>
-                </div>
-                <p className="text-green-600 font-semibold text-sm mb-2">economize R$20</p>
-                <p className="text-gray-600 text-sm">
-                  Mais tempo para criar consistência e ver resultados reais.
-                </p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Tudo do plano mensal</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Melhor custo-benefício inicial</span>
-                </li>
-              </ul>
-              <button
-                onClick={handleSelectPlan}
-                className="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 transition-colors"
-              >
-                Começar 7 dias grátis
-              </button>
-            </div>
-
-            {/* PLANO 6 MESES */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-400 hover:border-blue-600 transition-all hover:shadow-2xl">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">6 Meses</h3>
-                <div className="mb-2">
-                  <span className="text-4xl font-bold text-gray-900">R$229,90</span>
-                </div>
-                <p className="text-blue-600 font-semibold text-sm mb-2">economize R$70</p>
-                <p className="text-gray-600 text-sm">
-                  O equilíbrio ideal entre compromisso e resultado.
-                </p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Tudo dos planos anteriores</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-sm">Transformação mais sólida</span>
-                </li>
-              </ul>
-              <button
-                onClick={handleSelectPlan}
-                className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-colors"
-              >
-                Começar 7 dias grátis
-              </button>
-            </div>
-
-            {/* PLANO ANUAL - DESTAQUE */}
-            <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl shadow-2xl p-8 border-4 border-yellow-400 relative transform hover:scale-105 transition-all">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-yellow-400 text-gray-900 font-bold px-6 py-2 rounded-full text-sm flex items-center gap-2 shadow-lg">
-                  <Sparkles className="w-4 h-4" />
-                  MAIS VANTAJOSO
-                  <Sparkles className="w-4 h-4" />
-                </div>
-              </div>
-              <div className="text-center mb-6 mt-4">
-                <h3 className="text-2xl font-bold text-white mb-2">Anual</h3>
-                <div className="mb-2">
-                  <span className="text-4xl font-bold text-white">R$399,90</span>
-                  <span className="text-blue-100">/ano</span>
-                </div>
-                <p className="text-yellow-300 font-semibold text-sm mb-2">equivale a R$33/mês</p>
-                <p className="text-white text-sm">
-                  Para quem decidiu mudar de verdade.
-                </p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-yellow-300 flex-shrink-0 mt-0.5" />
-                  <span className="text-white text-sm">Tudo dos planos anteriores</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-yellow-300 flex-shrink-0 mt-0.5" />
-                  <span className="text-white text-sm">Maior economia</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-yellow-300 flex-shrink-0 mt-0.5" />
-                  <span className="text-white text-sm">Melhor resultado a longo prazo</span>
-                </li>
-              </ul>
-              <button
-                onClick={handleSelectPlan}
-                className="w-full bg-yellow-400 text-gray-900 font-bold py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg"
-              >
-                Começar 7 dias grátis
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 4️⃣ TESTE GRÁTIS - QUEBRA TOTAL DE OBJEÇÃO */}
-        <div className="mb-16 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-10 text-center text-white">
-            <div className="flex justify-center mb-6">
-              <Shield className="w-16 h-16" />
-            </div>
-            <h2 className="text-3xl font-bold mb-6">
-              Experimente o LEVVE por 7 dias gratuitamente
-            </h2>
-            <p className="text-xl leading-relaxed mb-6">
-              O cartão é necessário apenas para ativar o teste.
-              <br />
-              Se não fizer sentido para você, cancele antes da cobrança.
-            </p>
-            <div className="grid md:grid-cols-3 gap-4 mt-8">
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <p className="font-semibold">Transparente</p>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <p className="font-semibold">Sem letras miúdas</p>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <p className="font-semibold">Sem surpresas</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 5️⃣ CTA FINAL - DECISÃO */}
-        <div className="text-center mb-16">
-          <button
-            onClick={handleSelectPlan}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-2xl font-bold py-6 px-16 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-2xl mb-6"
-          >
-            Ativar meu teste grátis agora
-          </button>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
-            Você não está comprando um app.
-            <br />
-            <span className="font-bold text-gray-900">
-              Você está investindo na sua transformação.
-            </span>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Invista na sua saúde com o melhor custo-benefício. Quanto mais tempo, mais você economiza.
           </p>
         </div>
 
-        {/* 6️⃣ PROVA DE CONFIANÇA FINAL */}
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <p className="font-semibold text-gray-900">Sem dietas caras</p>
+        {/* Cards de Planos */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* Plano Mensal */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#0066FF] transition-all">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Mensal</h3>
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-4xl font-bold text-[#0066FF]">R$ 49,90</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-2">por mês</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <p className="font-semibold text-gray-900">Sem promessas milagrosas</p>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <p className="font-semibold text-gray-900">Simples, possível e acessível</p>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <p className="font-semibold text-gray-900">Acompanhamento diário que não deixa você desistir</p>
-            </div>
+
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Tracker de calorias completo</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Acompanhamento diário por IA</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Plano alimentar personalizado</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Relatórios de progresso</span>
+              </li>
+            </ul>
+
+            <a
+              href={STRIPE_MENSAL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-[#0066FF] text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center"
+            >
+              Escolher Mensal
+            </a>
           </div>
+
+          {/* Plano Trimestral */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#0066FF] transition-all">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Trimestral</h3>
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-4xl font-bold text-[#0066FF]">R$ 129,90</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-1">a cada 3 meses</p>
+              <div className="mt-3 inline-block bg-blue-100 text-[#0066FF] px-3 py-1 rounded-full text-sm font-semibold">
+                R$ 43,30/mês
+              </div>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 text-center">
+              <p className="text-green-800 font-bold text-sm">
+                Economize R$ 19,80 (13%)
+              </p>
+            </div>
+
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Tracker de calorias completo</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Acompanhamento diário por IA</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Plano alimentar personalizado</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Relatórios de progresso</span>
+              </li>
+            </ul>
+
+            <a
+              href={STRIPE_TRIMESTRAL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-[#0066FF] text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center"
+            >
+              Escolher Trimestral
+            </a>
+          </div>
+
+          {/* Plano Semestral */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#0066FF] hover:border-blue-700 transition-all relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg">
+              Mais Popular
+            </div>
+
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Semestral</h3>
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-4xl font-bold text-[#0066FF]">R$ 229,90</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-1">a cada 6 meses</p>
+              <div className="mt-3 inline-block bg-blue-100 text-[#0066FF] px-3 py-1 rounded-full text-sm font-semibold">
+                R$ 38,32/mês
+              </div>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 text-center">
+              <p className="text-green-800 font-bold text-sm">
+                Economize R$ 69,50 (23%)
+              </p>
+            </div>
+
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Tracker de calorias completo</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Acompanhamento diário por IA</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Plano alimentar personalizado</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">Relatórios de progresso</span>
+              </li>
+            </ul>
+
+            <a
+              href={STRIPE_SEMESTRAL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-[#0066FF] text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center"
+            >
+              Escolher Semestral
+            </a>
+          </div>
+
+          {/* Plano Anual */}
+          <div className="bg-gradient-to-br from-[#0066FF] to-blue-700 rounded-2xl shadow-xl p-6 border-2 border-[#0066FF] relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-4 py-1 rounded-full text-xs font-bold shadow-lg">
+              Melhor Custo
+            </div>
+
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">Anual</h3>
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-4xl font-bold text-white">R$ 399,00</span>
+              </div>
+              <p className="text-blue-100 text-sm mt-1">cobrado anualmente</p>
+              <div className="mt-3 inline-block bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-semibold">
+                R$ 33,25/mês
+              </div>
+            </div>
+
+            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-3 mb-4 text-center">
+              <p className="text-white font-bold text-sm">
+                Economize R$ 199,80 (33%)
+              </p>
+            </div>
+
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-300 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-white">Tracker de calorias completo</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-300 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-white">Acompanhamento diário por IA</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-300 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-white">Plano alimentar personalizado</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-300 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-white">Relatórios de progresso</span>
+              </li>
+            </ul>
+
+            <a
+              href={STRIPE_ANUAL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-white text-[#0066FF] py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors text-center"
+            >
+              Escolher Anual
+            </a>
+          </div>
+        </div>
+
+        {/* Garantia */}
+        <div className="text-center bg-green-50 rounded-xl p-6 border border-green-200">
+          <p className="text-green-800 font-semibold">
+            ✓ Garantia de 7 dias - Cancele quando quiser
+          </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

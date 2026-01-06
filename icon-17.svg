@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#0066FF"/>
+  
+  <!-- Check mark with progress arc -->
+  <path d="M160 256L220 316L352 184" stroke="white" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Progress arc (partial circle) -->
+  <path d="M256 80C326.692 80 387.692 118.308 416 176" stroke="white" stroke-width="24" stroke-linecap="round" opacity="0.6"/>
+  <path d="M432 256C432 362.039 346.039 448 240 448" stroke="white" stroke-width="24" stroke-linecap="round" opacity="0.4"/>
+</svg>
