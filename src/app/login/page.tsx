@@ -69,8 +69,7 @@ if (!response.ok) {
 
 // Se sua API retornar alguma coisa tipo data.session ou data.user, ótimo.
 // Se não, salva pelo menos o email.
-await setSession({
-  email: trimmedEmail,
+
 
 })
 
