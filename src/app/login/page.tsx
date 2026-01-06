@@ -71,8 +71,7 @@ if (!response.ok) {
 // Se não, salva pelo menos o email.
 await setSession({
   email: trimmedEmail,
-  user: data?.user ?? null,
-  session: data?.session ?? null,
+
 })
 
 router.push('/app');   // ou '/dashboard'
