@@ -62,13 +62,22 @@ export default function LoginPage() {
         status: response.status, 
         body: data 
       });
+if (!response.ok) {
+  setError(data?.error || data?.message || 'Email ou senha inválidos.')
+  return
+}
 
-      if (!response.ok) {
-        // Exibir erro real do backend
-        setError(data.message || 'Erro ao fazer login');
-        setLoading(false);
-        return;
-      }
+// Se sua API retornar alguma coisa tipo data.session ou data.user, ótimo.
+// Se não, salva pelo menos o email.
+await setSession({
+  email: trimmedEmail,
+  user: data?.user ?? null,
+  session: data?.session ?? null,
+})
+
+router.push('/app')   // ou '/dashboard' se você preferir
+router.refresh()
+    
 
       console.log("✅ LOGIN_SUCCESS", { 
         user: data.user,
@@ -76,15 +85,7 @@ export default function LoginPage() {
         hasSubscription: data.user?.hasActiveSubscription
       });
 
-      // Salvar sessão no localStorage como backup
-      if (data.user) {
-        setSession(data.user);
-        console.log("✅ SESSION_CREATED - Sessão salva");
-      } else {
-        console.error("❌ Dados do usuário não retornados pela API");
-        setError("Erro ao processar login");
-        setLoading(false);
-        return;
+  
       }
 
       // Aguardar para garantir que cookies foram setados
@@ -108,14 +109,15 @@ export default function LoginPage() {
       }
 
       console.log("🚀 REDIRECT_TO:", destination);
+      router.push(destination);
+router.refresh();
       
-      // Usar window.location.href para garantir reload completo
-      window.location.href = destination;
-      
-    } catch (err) {
-      console.error("LOGIN ERROR (EXCEPTION)", err);
-      setError("Erro ao fazer login. Verifique sua conexão e tente novamente.");
-      setLoading(false);
+ } catch (err) {
+  console.error('LOGIN ERROR (EXCEPTION)', err);
+  setError('Erro ao fazer login. Verifique sua conexão e tente novamente.');
+} finally {
+  setLoading(false);
+}
     }
   };
 
