@@ -63,15 +63,13 @@ export default function LoginPage() {
         body: data 
       });
 if (!response.ok) {
-  setError(data?.error || data?.message || 'Email ou senha inválidos.')
-  return
+  setError(data?.error || data?.message || 'Email ou senha inválidos.');
+  return;
 }
 
-// Se sua API retornar alguma coisa tipo data.session ou data.user, ótimo.
-// Se não, salva pelo menos o email.
 
 
-})
+
 
 router.push('/app');   // ou '/dashboard'
 router.refresh();
