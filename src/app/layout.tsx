@@ -61,7 +61,6 @@ export default function RootLayout({
         <meta name="theme-color" content="#2E5BFF" />
       </head>
      <body className={`${inter.variable} antialiased flex flex-col min-h-screen`}>
-      >
         <AppHeader />
         <main className="flex-1">{children}</main>
         <Footer />
