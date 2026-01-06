@@ -54,7 +54,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <Script src="/lasy-bridge.js" strategy="beforeInteractive" />
         <link rel="icon" href={LEVVE_ICON_URL} type="image/jpeg" sizes="32x32" />
         <link rel="icon" href={LEVVE_ICON_URL} type="image/jpeg" sizes="16x16" />
         <link rel="apple-touch-icon" href={LEVVE_ICON_URL} sizes="180x180" />
