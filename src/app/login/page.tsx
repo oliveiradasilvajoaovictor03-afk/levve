@@ -75,42 +75,11 @@ await setSession({
   session: data?.session ?? null,
 })
 
-router.push('/app')   // ou '/dashboard' se você preferir
-router.refresh()
+router.push('/app');   // ou '/dashboard'
+router.refresh();
     
 
-      console.log("✅ LOGIN_SUCCESS", { 
-        user: data.user,
-        isAdmin: data.user?.isAdmin,
-        hasSubscription: data.user?.hasActiveSubscription
-      });
-
-  
-      }
-
-      // Aguardar para garantir que cookies foram setados
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      // Determinar destino do redirecionamento
-      let destination = "/dashboard";
       
-      if (data.user.isAdmin) {
-        destination = "/dashboard";
-        console.log("🔑 ADMIN LOGIN - Redirecionando para:", destination);
-      } else if (data.user.hasActiveSubscription) {
-        destination = "/dashboard";
-        console.log("✅ Usuário com plano - Redirecionando para:", destination);
-      } else if (!data.user.onboardingCompleted) {
-        destination = "/onboarding";
-        console.log("⚠️ Onboarding não completo - Redirecionando para:", destination);
-      } else {
-        destination = "/checkout";
-        console.log("⚠️ Usuário sem plano - Redirecionando para:", destination);
-      }
-
-      console.log("🚀 REDIRECT_TO:", destination);
-      router.push(destination);
-router.refresh();
       
  } catch (err) {
   console.error('LOGIN ERROR (EXCEPTION)', err);
