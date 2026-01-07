@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { BYPASS_AUTH, isPublicRoute, shouldProtectRoute } from './lib/auth-config';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   console.log('=== MIDDLEWARE EXECUTADO ===');
   console.log('[MIDDLEWARE] currentRoute:', pathname);
+  console.log('[MIDDLEWARE] 🔧 BYPASS_AUTH:', BYPASS_AUTH ? 'ON (acesso total)' : 'OFF (proteção ativa)');
 
   // Permitir acesso a assets, API routes e arquivos estáticos
   if (
@@ -16,6 +18,15 @@ export function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
+
+  // 🚨 BYPASS MODE: Se BYPASS_AUTH está ativo, liberar tudo
+  if (BYPASS_AUTH) {
+    console.log('[MIDDLEWARE] 🚨 BYPASS_AUTH ATIVO - Acesso total liberado para:', pathname);
+    console.log('[MIDDLEWARE] ✅ BYPASS_MODE_ACTIVE');
+    return NextResponse.next();
+  }
+
+  // ===== MODO NORMAL (BYPASS_AUTH = false) =====
 
   // Verificar se usuário está autenticado (via cookie)
   const authCookie = request.cookies.get('levve_auth');
@@ -46,31 +57,8 @@ export function middleware(request: NextRequest) {
     currentRoute: pathname
   });
 
-  // ROTAS PÚBLICAS (não precisam de autenticação)
-  const publicRoutes = [
-    '/',
-    '/login',
-    '/signup',
-    '/create-account',
-    '/forgot-password',
-    '/reset-password',
-    '/privacy-policy',
-    '/terms-of-use',
-    '/privacidade',
-    '/termos',
-    '/contato',
-    '/planos',
-    '/quiz-start',
-    '/quiz',
-    '/resultado',
-    '/onboarding',
-    '/welcome',
-    '/boas-vindas',
-    '/boas-lindas',
-    '/teste',
-  ];
-
-  const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'));
+  // Verificar se é rota pública (usando auth-config)
+  const isPublic = isPublicRoute(pathname);
 
   // 🔑 ADMIN: Acesso total sem restrições
   if (isAdminUser && isAuthenticated) {
@@ -123,7 +111,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Permitir acesso normal a rotas públicas
-  if (isPublicRoute) {
+  if (isPublic) {
     console.log('[MIDDLEWARE] ✅ Public route, allowing access to:', pathname);
     return NextResponse.next();
   }

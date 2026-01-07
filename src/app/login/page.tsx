@@ -62,29 +62,62 @@ export default function LoginPage() {
         status: response.status, 
         body: data 
       });
-if (!response.ok) {
-  setError(data?.error || data?.message || 'Email ou senha inválidos.');
-  return;
-}
 
+      if (!response.ok) {
+        // Exibir erro real do backend
+        setError(data.message || 'Erro ao fazer login');
+        setLoading(false);
+        return;
+      }
 
+      console.log("✅ LOGIN_SUCCESS", { 
+        user: data.user,
+        isAdmin: data.user?.isAdmin,
+        hasSubscription: data.user?.hasActiveSubscription
+      });
 
+      // Salvar sessão no localStorage como backup
+      if (data.user) {
+        setSession(data.user);
+        console.log("✅ SESSION_CREATED - Sessão salva");
+      } else {
+        console.error("❌ Dados do usuário não retornados pela API");
+        setError("Erro ao processar login");
+        setLoading(false);
+        return;
+      }
 
+      // Aguardar para garantir que cookies foram setados
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-router.push('/app');   // ou '/dashboard'
-router.refresh();
-    
-
+      // Determinar destino do redirecionamento
+      let destination = "/dashboard";
       
+      if (data.user.isAdmin) {
+        destination = "/dashboard";
+        console.log("🔑 ADMIN LOGIN - Redirecionando para:", destination);
+      } else if (data.user.hasActiveSubscription) {
+        destination = "/dashboard";
+        console.log("✅ Usuário com plano - Redirecionando para:", destination);
+      } else if (!data.user.onboardingCompleted) {
+        destination = "/onboarding";
+        console.log("⚠️ Onboarding não completo - Redirecionando para:", destination);
+      } else {
+        destination = "/checkout";
+        console.log("⚠️ Usuário sem plano - Redirecionando para:", destination);
+      }
+
+      console.log("🚀 REDIRECT_TO:", destination);
       
- } catch (err) {
-  console.error('LOGIN ERROR (EXCEPTION)', err);
-  setError('Erro ao fazer login. Verifique sua conexão e tente novamente.');
-} finally {
-  setLoading(false);
-}
+      // Usar window.location.href para garantir reload completo
+      window.location.href = destination;
+      
+    } catch (err) {
+      console.error("LOGIN ERROR (EXCEPTION)", err);
+      setError("Erro ao fazer login. Verifique sua conexão e tente novamente.");
+      setLoading(false);
     }
-  
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">

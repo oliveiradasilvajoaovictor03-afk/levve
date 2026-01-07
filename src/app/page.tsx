@@ -33,6 +33,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 pt-2">
                 <Link 
                   href="/quiz/start"
+                  prefetch={false}
                   className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#0066FF] hover:bg-[#0052CC] text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   Começar gratuitamente
@@ -41,6 +42,7 @@ export default function Home() {
                 
                 <Link 
                   href="/planos"
+                  prefetch={false}
                   className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 hover:border-[#0066FF] text-gray-700 hover:text-[#0066FF] text-lg font-semibold rounded-xl transition-all duration-300"
                 >
                   Ver planos
@@ -505,6 +507,7 @@ export default function Home() {
           </p>
           <Link 
             href="/quiz/start"
+            prefetch={false}
             className="inline-flex items-center gap-3 px-10 py-5 sm:px-12 sm:py-6 bg-white text-[#0066FF] text-lg sm:text-xl font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105"
           >
             Começar gratuitamente
